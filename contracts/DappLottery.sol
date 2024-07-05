@@ -210,7 +210,7 @@ contract DappLottery is Ownable {
         // _totalLotteries.current()是当前值，已创建彩票活动总数
         Lotteries = new LotteryStruct[](_totalLotteries.current());
 
-        for (uint256 i = 1; i < _totalLotteries.current(); i++) {
+        for (uint256 i = 1; i <= _totalLotteries.current(); i++) {
             Lotteries[i - 1] = lotteries[i];
         }
     }

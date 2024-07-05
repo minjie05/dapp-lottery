@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { globalActions } from "@/store/globalSlices";
 import address from "@/artifacts/contractAddress.json";
 import abi from "@/artifacts/contracts/DappLottery.sol/DappLottery.json";
-import { toWei, fromWei } from "@/utils/index";
+import { toWei, fromWei, formatDate } from "@/utils/index";
 
 const { setWallet } = globalActions;
 const contractAddress = address.address;
@@ -32,20 +32,27 @@ export const ssrEthereumContract = async () => {
 };
 
 const structureLotteries = (lotteries) => {
-  lotteries.map((lottery) => ({
-    id: Number(lottery.id),
-    title: lottery.title,
-    description: lottery.description,
-    image: lottery.image,
-    prize: fromWei(lottery.prize),
-    ticketPrice: fromWei(lottery.ticketPrice),
-    participants: Number(lottery.participants),
-    drawn: lottery.drawn,
-    owner: lottery.owner.toLowerCase(),
-    createAt: formatDate(Number(lottery.createAt + "000")),
-    expiresAt: Number(lottery.expiresAt),
-    drawsAt: formatDate(Number(lottery.expiresAt)),
-  }));
+  let res = [];
+  lotteries.map((lottery) => {
+    let obj = {
+      id: Number(lottery.id),
+      title: lottery.title,
+      description: lottery.description,
+      image: lottery.image,
+      prize: fromWei(lottery.prize),
+      ticketPrice: fromWei(lottery.ticketPrice),
+      participants: Number(lottery.participants),
+      drawn: lottery.drawn,
+      owner: lottery.owner.toLowerCase(),
+      createAt: formatDate(Number(lottery.createAt + "000")),
+      expiresAt: Number(lottery.expiresAt),
+      drawsAt: formatDate(Number(lottery.expiresAt)),
+    };
+    res.push(obj);
+    return obj;
+  });
+
+  return res;
 };
 
 // pull data from the blockchain
@@ -53,7 +60,7 @@ export const getLotteries = async () => {
   const contract = await ssrEthereumContract();
   const lotteries = await contract.functions.getLotteries();
 
-  return lotteries;
+  return structureLotteries(lotteries[0]);
 };
 
 export const connectWallet = async () => {

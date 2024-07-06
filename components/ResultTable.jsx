@@ -4,8 +4,14 @@ import { FaEthereum } from "react-icons/fa";
 import Identicon from "react-identicons";
 import { CountDown } from "@/components/countdown";
 import { truncate } from "@/utils/index";
+import { useDispatch, useSelector } from "react-redux";
+import { globalActions } from "@/store/globalSlices";
 
 export const ResultTable = ({ jackpot, participantList, lotteryResult }) => {
+  const { setWinnersModal } = globalActions;
+  const { winnersModal } = useSelector((state) => state.globalState);
+  const dispatch = useDispatch();
+
   return (
     <div className="px-5 bg-slate-100 py-10 ">
       <div className="flex flex-col items-center justify-center text-center py-10">
@@ -37,7 +43,11 @@ export const ResultTable = ({ jackpot, participantList, lotteryResult }) => {
           <CountDown timestamp={jackpot?.expiresAt}></CountDown>
         ) : null}
         <div className="flex justify-center items-center space-x-2">
-          <button className="border text-white bg-amber-500 rounded-full px-4 py-2 font-semibold hover:bg-[#ea580c]">
+          <button
+            className="border text-white bg-amber-500 rounded-full 
+          px-4 py-2 font-semibold hover:bg-[#ea580c]"
+            onClick={() => dispatch(setWinnersModal("scale-100"))}
+          >
             Perform Draw
           </button>
           <Link

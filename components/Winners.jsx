@@ -1,20 +1,25 @@
-import { FaTimes } from 'react-icons/fa'
-import { useState } from 'react'
-import { getPurchaseNumbers } from '@/services/fakeData'
+import { FaTimes } from "react-icons/fa";
+import { useState } from "react";
+import { getPurchaseNumbers } from "@/services/fakeData";
+import { useDispatch, useSelector } from "react-redux";
+import { globalActions } from "@/store/globalSlices";
 
 export const Winners = ({ show }) => {
-  const [numbersOfwinners, setNumbersOfwinners] = useState('')
-  const [close, setClose] = useState(show ? 'scale-100' : null)
+  const [numbersOfwinners, setNumbersOfwinners] = useState("");
+  const { setWinnersModal } = globalActions;
+  const { winnersModal } = useSelector((state) => state.globalState);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    console.log('Winners---luckyNumbers--->', numbersOfwinners)
-    setClose('scale-0')
-  }
+    console.log("Winners---luckyNumbers--->", numbersOfwinners);
+    dispatch(setWinnersModal("scale-0"));
+  };
   return (
     <div
-      className={`z-10 fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 transform transition-transform duration-300 ${close}`}
+      className={`z-10 fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black 
+      bg-opacity-50 transform transition-transform duration-300 ${winnersModal}`}
     >
       <div className="bg-white shadow-xl shadow-gray-800 rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <form className="flex flex-col" onSubmit={handleSubmit}>
@@ -22,7 +27,7 @@ export const Winners = ({ show }) => {
             <p className="font-semibold">Imerging Winners</p>
             <button
               className="border-0 bg-transparent focus:outline-none"
-              onClick={() => setClose('scale-0')}
+              onClick={() => dispatch(setWinnersModal("scale-0"))}
             >
               <FaTimes />
             </button>
@@ -48,5 +53,5 @@ export const Winners = ({ show }) => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};

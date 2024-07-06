@@ -39,3 +39,31 @@ export const formatDate = (timeStamp) => {
 
   return `${dayOfWeek} ${monthOfYear} ${dayOfMonth}, ${year}`;
 };
+
+export const structureLotteries = (lotteries) => {
+  let res = [];
+  lotteries.map((lottery) => {
+    let obj = {
+      id: Number(lottery.id),
+      title: lottery.title,
+      description: lottery.description,
+      image: lottery.image,
+      prize: fromWei(lottery.prize),
+      ticketPrice: fromWei(lottery.ticketPrice),
+      participants: Number(lottery.participants),
+      drawn: lottery.drawn,
+      owner: lottery.owner.toLowerCase(),
+      createAt: formatDate(Number(lottery.createAt + "000")),
+      expiresAt: Number(lottery.expiresAt),
+      drawsAt: formatDate(Number(lottery.expiresAt)),
+    };
+    res.push(obj);
+    return obj;
+  });
+
+  return res.length > 1 ? res : res[0];
+};
+
+export const reportError = (error) => {
+  console.log("error.message:", error.message);
+};

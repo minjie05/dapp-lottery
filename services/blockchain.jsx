@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { globalActions } from "@/store/globalSlices";
 import address from "@/artifacts/contractAddress.json";
 import abi from "@/artifacts/contracts/DappLottery.sol/DappLottery.json";
-import { toWei, fromWei, formatDate } from "@/utils/index";
+import { toWei, fromWei, reportError, structureLotteries } from "@/utils/index";
 
 const { setWallet } = globalActions;
 const contractAddress = address.address;
@@ -31,36 +31,19 @@ export const ssrEthereumContract = async () => {
   return contract;
 };
 
-const structureLotteries = (lotteries) => {
-  let res = [];
-  lotteries.map((lottery) => {
-    let obj = {
-      id: Number(lottery.id),
-      title: lottery.title,
-      description: lottery.description,
-      image: lottery.image,
-      prize: fromWei(lottery.prize),
-      ticketPrice: fromWei(lottery.ticketPrice),
-      participants: Number(lottery.participants),
-      drawn: lottery.drawn,
-      owner: lottery.owner.toLowerCase(),
-      createAt: formatDate(Number(lottery.createAt + "000")),
-      expiresAt: Number(lottery.expiresAt),
-      drawsAt: formatDate(Number(lottery.expiresAt)),
-    };
-    res.push(obj);
-    return obj;
-  });
-
-  return res;
-};
-
 // pull data from the blockchain
 export const getLotteries = async () => {
   const contract = await ssrEthereumContract();
   const lotteries = await contract.functions.getLotteries();
 
   return structureLotteries(lotteries[0]);
+};
+
+export const getLottery = async (id) => {
+  const contract = await ssrEthereumContract();
+  const lottery = await contract.functions.getLottery(id);
+
+  return structureLotteries(lottery);
 };
 
 export const connectWallet = async () => {
@@ -100,8 +83,4 @@ export const monitorWalletConnection = async () => {
   } catch (error) {
     reportError(error);
   }
-};
-
-const reportError = (error) => {
-  console.log("error.message:", error.message);
 };

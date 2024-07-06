@@ -17,7 +17,47 @@ if (typeof window !== "undefined") {
   ethereum = window.ethereum;
 }
 
+// 用于连接MetaMask, 和交易时的签名
+const csrEthreumContract = async () => {
+  const provider = new ethers.providers.Web3Provider(ethereum);
+  // 这里的签名是MetaMask提供的
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+  return contract;
+};
+
+export const createJackpot = async ({
+  title,
+  description,
+  image,
+  prize,
+  ticketPrice,
+  expiresAt,
+}) => {
+  try {
+    if (!ethereum) return reportError("Please install Mestmask");
+    const wallet = store.getState().globalState.wallet;
+    const contract = await csrEthreumContract();
+
+    tx = await contract.createLottery(
+      title,
+      description,
+      image,
+      toWei(prize),
+      toWei(ticketPrice),
+      expiresAt,
+      {
+        from: wallet,
+      }
+    );
+    await tx.wait();
+  } catch (error) {
+    reportError(error);
+  }
+};
+
 // 务器端渲染时初始化一个Ethereum合约，以便在客户端与之交互
+// just read the data from the blockchain
 export const ssrEthereumContract = async () => {
   const provider = new ethers.providers.JsonRpcProvider(
     "http://127.0.0.1:8545/"

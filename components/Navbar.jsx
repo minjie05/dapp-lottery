@@ -25,7 +25,7 @@ export const Navbar = () => {
         {/* desktop menu section */}
         <div className="bg-[#fed7aa] w-full flex flex-row justify-between p-5 md:px-32 px-5 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
           <div className="text-2xl font-bold cursor-pointer text-[#ea580c]">
-            DappLottery
+            <Link href="/">DappLottery</Link>
           </div>
           {/* nav elements */}
           <nav className="hidden lg:flex flex-row items-center text-lg font-semibold gap-8 text-[#ea580c]">

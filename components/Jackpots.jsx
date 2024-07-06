@@ -39,7 +39,7 @@ const Jackpot = ({ jackpot }) => {
           </p>
         </div>
       </div>
-      <div className="py-5">
+      <div className="py-5 h-36">
         <p className="text-[#c2410c] font-bold">{jackpot.title}</p>
         <p className="text-gray-500 font-medium">
           {truncate(jackpot.description, 100, 0, 103)}

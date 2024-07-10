@@ -16,11 +16,7 @@ export const Generator = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
-    console.log(
-      "handleSubmit--->",
-      jackpotId,
-      generatorLuckyNumbers(luckyNumbers)
-    );
+    if (!luckyNumbers) return toast.warning("Please fill in the luckyNumber!");
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
@@ -46,38 +42,38 @@ export const Generator = () => {
        bg-black bg-opacity-50 transform transition-transform duration-300 ${gereratorModal}`}
     >
       <div className="bg-white shadow-xl shadow-gray-800 rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
-        <form className="flex flex-col" onSubmit={handleSubmit}>
-          <div className="flex justify-between items-center">
-            <p className="font-semibold">Generator Numbers</p>
-            <button
-              className="border-0 bg-transparent focus:outline-none"
-              onClick={() => dispatch(setGereratorModal("scale-0"))}
-            >
-              <FaTimes />
-            </button>
-          </div>
-          <div className="flex justify-center items-center bg-[#fed7aa] rounded-xl p-2.5 my-5">
-            <input
-              type="number"
-              step={1}
-              min={1}
-              name="luckyNumbers"
-              placeholder="Lucky Number e.g 19"
-              className="block w-full bg-transparent border-0 focus:outline-none focus:ring-0 text-sm"
-              onChange={(e) => setLuckyNumbers(e.target.value)}
-              value={luckyNumbers}
-            />
-          </div>
-          <div
-            onClick={() => {
-              handleSubmit();
-            }}
-            className="flex flex-row justify-center items-center 
-            w-full text-white text-md py-2 px-5 rounded-full drop-shadow-xl bg-[#ea580c] hover:bg-[#c2410c]"
+        {/* <form className="flex flex-col" onSubmit={handleSubmit}> */}
+        <div className="flex justify-between items-center">
+          <p className="font-semibold">Generator Numbers</p>
+          <button
+            className="border-0 bg-transparent focus:outline-none"
+            onClick={() => dispatch(setGereratorModal("scale-0"))}
           >
-            Generate and Save
-          </div>
-        </form>
+            <FaTimes />
+          </button>
+        </div>
+        <div className="flex justify-center items-center bg-[#fed7aa] rounded-xl p-2.5 my-5">
+          <input
+            type="number"
+            step={1}
+            min={1}
+            name="luckyNumbers"
+            placeholder="Lucky Number e.g 19"
+            className="block w-full bg-transparent border-0 focus:outline-none focus:ring-0 text-sm"
+            onChange={(e) => setLuckyNumbers(e.target.value)}
+            value={luckyNumbers}
+          />
+        </div>
+        <div
+          onClick={() => {
+            handleSubmit();
+          }}
+          className="flex flex-row justify-center items-center 
+            w-full text-white text-md py-2 px-5 rounded-full drop-shadow-xl bg-[#ea580c] hover:bg-[#c2410c]"
+        >
+          Generate and Save
+        </div>
+        {/* </form> */}
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
 
   const handlePurchase = async (index) => {
     if (!wallet) return toast.warning("Connect your wallet.");
+    if (!index) return;
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
@@ -34,6 +35,11 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
         error: "Encountered error 🤯",
       }
     );
+  };
+
+  const onGenerate = () => {
+    if (luckyNumbers.length > 0) return toast.warning("Already generated");
+    dispatch(setGereratorModal("scale-100"));
   };
 
   return (
@@ -58,13 +64,21 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
         ) : null}
 
         <div className="flex justify-center items-center space-x-2">
-          <button
-            className="border text-white bg-amber-500 
-          rounded-full px-4 py-2 font-semibold hover:bg-[#ea580c]"
-            onClick={() => dispatch(setGereratorModal("scale-100"))}
-          >
-            Generate Lucky Numbers
-          </button>
+          {wallet?.toLowerCase() == jackpot?.owner ? (
+            <button
+              className={`border text-white bg-amber-500 
+            rounded-full px-4 py-2 font-semibold ${
+              jackpot?.expiresAt < Date.now()
+                ? "bg-gray-500"
+                : "hover:bg-[#ea580c]"
+            }`}
+              onClick={onGenerate}
+              disabled={jackpot?.expiresAt < Date.now()}
+            >
+              Generate Lucky Numbers
+            </button>
+          ) : null}
+
           <Link
             href={"/result/" + jackpot?.id}
             className="py-2 px-4 boder bg-gray-500 rounded-full font-semibold text-white hover:bg-rose-600"

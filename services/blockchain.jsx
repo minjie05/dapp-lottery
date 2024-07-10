@@ -12,7 +12,8 @@ import {
   structuredParticipants,
 } from "@/utils/index";
 
-const { setWallet } = globalActions;
+const { setWallet, setLottery, setLuckyNumbers, setParticipants } =
+  globalActions;
 const contractAddress = address.address;
 const contractAbi = abi.abi;
 let tx, ethereum;
@@ -73,6 +74,9 @@ export const exportLuckyNumbers = async (id, luckyNumbers) => {
       gasLimit: "30000000",
     });
     await tx.wait();
+
+    const luckyNumber = await getLuckyNumbers(id);
+    store.dispatch(setLuckyNumbers(luckyNumber));
   } catch (error) {
     reportError(error);
   }
@@ -89,6 +93,13 @@ export const buyTickets = async (id, luckyNumberId, ticketPrice) => {
       gasLimit: "30000000",
     });
     await tx.wait();
+    const participants = await getPurchaseNumbers(id);
+    const luckyNumbers = await getLuckyNumbers(id);
+    const lottery = await getLottery(id);
+
+    store.dispatch(setParticipants(participants));
+    store.dispatch(setLuckyNumbers(luckyNumbers));
+    store.dispatch(setLottery(lottery));
   } catch (error) {
     reportError(error);
   }

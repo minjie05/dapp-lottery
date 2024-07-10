@@ -11,4 +11,13 @@ export const globalActions = {
   setWinnersModal: (state, action) => {
     state.winnersModal = action.payload;
   },
+  setLottery: (state, action) => {
+    state.jackpot = action.payload;
+  },
+  setLuckyNumbers: (state, action) => {
+    state.luckyNumbers = action.payload;
+  },
+  setParticipants: (state, action) => {
+    state.participants = action.payload;
+  },
 };

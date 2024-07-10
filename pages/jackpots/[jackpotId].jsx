@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { useDispatch, useSelector } from "react-redux";
+import { globalActions } from "@/store/globalSlices";
 import { Navbar } from "@/components/Navbar";
 import { JackpotTable } from "@/components/JackpotTable";
 import { Generator } from "@/components/Generator";
@@ -7,8 +9,21 @@ import {
   getLuckyNumbers,
   getPurchaseNumbers,
 } from "@/services/blockchain.jsx";
+import { useEffect } from "react";
 
-export default function Jackpot({ lottery, luckyNumbers, numbersPurchased }) {
+export default function Jackpot({ lottery, luckyNumber, numbersPurchased }) {
+  const dispatch = useDispatch();
+  const { setLottery, setLuckyNumbers, setParticipants } = globalActions;
+  const { jackpot, luckyNumbers, participants } = useSelector(
+    (state) => state.globalState
+  );
+
+  useEffect(() => {
+    dispatch(setLottery(lottery));
+    dispatch(setLuckyNumbers(luckyNumber));
+    dispatch(setParticipants(numbersPurchased));
+  }, []);
+
   return (
     <div className="overflow-hidden">
       <Head>
@@ -17,9 +32,9 @@ export default function Jackpot({ lottery, luckyNumbers, numbersPurchased }) {
       </Head>
       <Navbar />
       <JackpotTable
-        jackpot={lottery}
+        jackpot={jackpot}
         luckyNumbers={luckyNumbers}
-        participants={numbersPurchased}
+        participants={participants}
       />
       <Generator />
     </div>
@@ -28,16 +43,16 @@ export default function Jackpot({ lottery, luckyNumbers, numbersPurchased }) {
 
 export const getServerSideProps = async (context) => {
   const { jackpotId } = context.query;
-  const lottery = await getLottery(jackpotId);
+  const jackpot = await getLottery(jackpotId);
   const luckyNumbers = await getLuckyNumbers(jackpotId);
-  const purchaseNumbers = await getPurchaseNumbers(jackpotId);
+  const participants = await getPurchaseNumbers(jackpotId);
 
   return {
     props: {
-      lottery: JSON.parse(JSON.stringify(lottery)),
-      luckyNumbers:
+      lottery: JSON.parse(JSON.stringify(jackpot)),
+      luckyNumber:
         luckyNumbers.length > 0 ? JSON.parse(JSON.stringify(luckyNumbers)) : [],
-      numbersPurchased: JSON.parse(JSON.stringify(purchaseNumbers)),
+      numbersPurchased: JSON.parse(JSON.stringify(participants)),
     },
   };
 };

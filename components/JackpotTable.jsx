@@ -1,17 +1,39 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import { FaEthereum } from "react-icons/fa";
 import { CountDown } from "@/components/CountDown";
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "@/store/globalSlices";
+import { buyTickets } from "@/services/blockchain";
 
 export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
-  console.log("luckyNumbers--->", luckyNumbers);
+  const router = useRouter();
+  const { jackpotId } = router.query;
   const { setGereratorModal } = globalActions;
+  const { wallet } = useSelector((state) => state.globalState);
   const dispatch = useDispatch();
-  const handlePurchase = async (luckyNumberId) => {
-    console.log("luckyNumberId--->", luckyNumberId);
+
+  const handlePurchase = async (index) => {
+    if (!wallet) return toast.warning("Connect your wallet.");
+
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await buyTickets(jackpotId, index, jackpot?.ticketPrice)
+          .then(() => {
+            resolve();
+          })
+          .catch(() => reject());
+      }),
+      {
+        pending: "Approve transaction...",
+        success: "Jackpot created successfully 👌",
+        reject: "Encountered error 🤯",
+        error: "Encountered error 🤯",
+      }
+    );
   };
 
   return (
@@ -83,9 +105,14 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
                   <td>
                     <button
                       onClick={() => {
-                        handlePurchase(luckyNumber);
+                        handlePurchase(i);
                       }}
-                      className="text-white bg-[#ea580c] rounded-full py-2 px-4 hover:bg-rose-600 mt-1"
+                      className={`text-white bg-[#ea580c] rounded-full py-2 
+                      px-4 mt-1 ${
+                        participants.includes(luckyNumber)
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:bg-rose-600"
+                      }`}
                     >
                       BUY NOW
                     </button>

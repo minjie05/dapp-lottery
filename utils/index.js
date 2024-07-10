@@ -81,3 +81,26 @@ export const generatorLuckyNumbers = (length) => {
   }
   return result;
 };
+
+export const structuredParticipants = (participants) => {
+  let res = [];
+  participants.map((item) => {
+    res.push({
+      account: item[0].toLowerCase(),
+      lotteryNumber: item[1],
+      paid: item[2],
+    });
+  });
+  return res;
+};
+
+export const structuredNumber = (participants) => {
+  const res = [];
+
+  for (let i = 0; i < participants.length; i++) {
+    let temp = participants[i][1];
+    res.push(temp);
+  }
+
+  return res;
+};

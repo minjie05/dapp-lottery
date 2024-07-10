@@ -3,7 +3,14 @@ import { ethers } from "ethers";
 import { globalActions } from "@/store/globalSlices";
 import address from "@/artifacts/contractAddress.json";
 import abi from "@/artifacts/contracts/DappLottery.sol/DappLottery.json";
-import { toWei, fromWei, reportError, structureLotteries } from "@/utils/index";
+import {
+  toWei,
+  fromWei,
+  reportError,
+  structuredNumber,
+  structureLotteries,
+  structuredParticipants,
+} from "@/utils/index";
 
 const { setWallet } = globalActions;
 const contractAddress = address.address;
@@ -71,6 +78,22 @@ export const exportLuckyNumbers = async (id, luckyNumbers) => {
   }
 };
 
+export const buyTickets = async (id, luckyNumberId, ticketPrice) => {
+  try {
+    const wallet = store.getState().globalState.wallet;
+    const contract = await csrEthreumContract();
+
+    tx = await contract.functions.buyTicket(id, luckyNumberId, {
+      from: wallet,
+      value: toWei(ticketPrice),
+      gasLimit: "30000000",
+    });
+    await tx.wait();
+  } catch (error) {
+    reportError(error);
+  }
+};
+
 // 务器端渲染时初始化一个Ethereum合约，以便在客户端与之交互
 // just read the data from the blockchain
 export const ssrEthereumContract = async () => {
@@ -97,8 +120,15 @@ export const getLotteries = async () => {
 export const getLuckyNumbers = async (id) => {
   const contract = await ssrEthereumContract();
   const luckyNumbers = await contract.getLotteryLuckyNumbers(id);
-  console.log("luckyNumbers000--->", luckyNumbers);
+
   return luckyNumbers;
+};
+
+export const getPurchaseNumbers = async (id) => {
+  const contract = await ssrEthereumContract();
+  const participants = await contract.getLotteryParticipants(id);
+
+  return structuredNumber(participants);
 };
 
 export const getLottery = async (id) => {

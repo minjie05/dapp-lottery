@@ -3,11 +3,10 @@ import { Navbar } from "@/components/Navbar";
 import { JackpotTable } from "@/components/JackpotTable";
 import { Generator } from "@/components/Generator";
 import {
-  generateLottery,
-  generateLotteryParticipants,
+  getLottery,
+  getLuckyNumbers,
   getPurchaseNumbers,
-} from "@/services/fakeData";
-import { getLottery, getLuckyNumbers } from "@/services/blockchain.jsx";
+} from "@/services/blockchain.jsx";
 
 export default function Jackpot({ lottery, luckyNumbers, numbersPurchased }) {
   return (
@@ -30,10 +29,8 @@ export default function Jackpot({ lottery, luckyNumbers, numbersPurchased }) {
 export const getServerSideProps = async (context) => {
   const { jackpotId } = context.query;
   const lottery = await getLottery(jackpotId);
-  const luckyNumbers = getLuckyNumbers(jackpotId);
-  const purchaseNumbers = getPurchaseNumbers(5);
-
-  console.log("getServerSideProps---luckyNumbers--->", luckyNumbers);
+  const luckyNumbers = await getLuckyNumbers(jackpotId);
+  const purchaseNumbers = await getPurchaseNumbers(jackpotId);
 
   return {
     props: {

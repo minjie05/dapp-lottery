@@ -1,11 +1,13 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { FaEthereum } from "react-icons/fa";
 import { CountDown } from "@/components/CountDown";
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "@/store/globalSlices";
 
 export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
+  console.log("luckyNumbers--->", luckyNumbers);
   const { setGereratorModal } = globalActions;
   const dispatch = useDispatch();
   const handlePurchase = async (luckyNumberId) => {
@@ -13,7 +15,7 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
   };
 
   return (
-    <div className="px-5 bg-slate-100 py-10 h-[90vh]">
+    <div className="px-5 bg-slate-100 py-10 h-screen">
       <div className="flex flex-col items-center justify-center text-center py-10">
         <h4 className="text-4xl text-slate-700 font-bold pb-3">
           Buy Lottery Online
@@ -66,27 +68,41 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
             </tr>
           </thead>
           <tbody className="block">
-            {luckyNumbers.map((luckyNumber, i) => (
-              <tr className="flex justify-between text-left border">
-                <td className="px-4 py-3 font-semibold">{i + 1}</td>
-                <td className="px-4 py-3 font-semibold">
-                  <FaEthereum size={20} className="inline-block mr-1" />
-                  <span>{jackpot?.ticketPrice}</span>
-                </td>
-                <td className="px-4 py-3 font-semibold">{jackpot?.drawsAt}</td>
-                <td className="px-4 py-3 font-semibold">{luckyNumber}</td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handlePurchase(luckyNumber);
-                    }}
-                    className="text-white bg-[#ea580c] rounded-full py-2 px-4 hover:bg-rose-600 mt-1"
-                  >
-                    BUY NOW
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {luckyNumbers?.length > 0 &&
+              luckyNumbers?.map((luckyNumber, i) => (
+                <tr className="flex justify-between text-left border">
+                  <td className="px-4 py-3 font-semibold">{i + 1}</td>
+                  <td className="px-4 py-3 font-semibold">
+                    <FaEthereum size={20} className="inline-block mr-1" />
+                    <span>{jackpot?.ticketPrice}</span>
+                  </td>
+                  <td className="px-4 py-3 font-semibold">
+                    {jackpot?.drawsAt}
+                  </td>
+                  <td className="px-4 py-3 font-semibold">{luckyNumber}</td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        handlePurchase(luckyNumber);
+                      }}
+                      className="text-white bg-[#ea580c] rounded-full py-2 px-4 hover:bg-rose-600 mt-1"
+                    >
+                      BUY NOW
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            {luckyNumbers?.length == 0 && (
+              <div className="flex justify-center p-5">
+                <Image
+                  src="/empty-icon.png"
+                  width={200}
+                  height={300}
+                  alt="empty"
+                  className=""
+                ></Image>
+              </div>
+            )}
           </tbody>
         </table>
       </div>

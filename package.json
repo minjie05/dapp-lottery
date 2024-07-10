@@ -17,7 +17,8 @@
     "export": "next build && next export",
     "lint": "next lint",
     "format": "prettier --ignore-path .gitignore \"pages/**/*.+(ts|js|tsx)\" --write",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost"
   },
   "lint-staged": {
     "./src/**/*.{ts,js,jsx,tsx}": [

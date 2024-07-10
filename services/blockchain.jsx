@@ -56,6 +56,21 @@ export const createJackpot = async ({
   }
 };
 
+export const exportLuckyNumbers = async (id, luckyNumbers) => {
+  try {
+    const wallet = store.getState().globalState.wallet;
+    const contract = await csrEthreumContract();
+
+    tx = await contract.functions.importLuckyNumbers(id, luckyNumbers, {
+      from: wallet,
+      gasLimit: "30000000",
+    });
+    await tx.wait();
+  } catch (error) {
+    reportError(error);
+  }
+};
+
 // 务器端渲染时初始化一个Ethereum合约，以便在客户端与之交互
 // just read the data from the blockchain
 export const ssrEthereumContract = async () => {
@@ -77,6 +92,13 @@ export const getLotteries = async () => {
   const lotteries = await contract.functions.getLotteries();
 
   return structureLotteries(lotteries[0]);
+};
+
+export const getLuckyNumbers = async (id) => {
+  const contract = await ssrEthereumContract();
+  const luckyNumbers = await contract.getLotteryLuckyNumbers(id);
+  console.log("luckyNumbers000--->", luckyNumbers);
+  return luckyNumbers;
 };
 
 export const getLottery = async (id) => {

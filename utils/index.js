@@ -67,3 +67,17 @@ export const structureLotteries = (lotteries) => {
 export const reportError = (error) => {
   console.log("error.message:", error.message);
 };
+
+export const generatorLuckyNumbers = (length) => {
+  const charaters =
+    "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789";
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    let str = "";
+    for (let j = 0; j < 6; j++) {
+      str += charaters.charAt(Math.floor(Math.random() * charaters.length));
+    }
+    result.push(str);
+  }
+  return result;
+};

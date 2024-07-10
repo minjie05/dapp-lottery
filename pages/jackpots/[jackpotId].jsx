@@ -7,10 +7,9 @@ import {
   generateLotteryParticipants,
   getPurchaseNumbers,
 } from "@/services/fakeData";
-import { useState } from "react";
-import { getLottery } from "@/services/blockchain.jsx";
+import { getLottery, getLuckyNumbers } from "@/services/blockchain.jsx";
 
-export default function Jackpot({ lottery, lotteryNumbers, numbersPurchased }) {
+export default function Jackpot({ lottery, luckyNumbers, numbersPurchased }) {
   return (
     <div className="overflow-hidden">
       <Head>
@@ -20,7 +19,7 @@ export default function Jackpot({ lottery, lotteryNumbers, numbersPurchased }) {
       <Navbar />
       <JackpotTable
         jackpot={lottery}
-        luckyNumbers={lotteryNumbers}
+        luckyNumbers={luckyNumbers}
         participants={numbersPurchased}
       />
       <Generator />
@@ -31,14 +30,16 @@ export default function Jackpot({ lottery, lotteryNumbers, numbersPurchased }) {
 export const getServerSideProps = async (context) => {
   const { jackpotId } = context.query;
   const lottery = await getLottery(jackpotId);
-
+  const luckyNumbers = getLuckyNumbers(jackpotId);
   const purchaseNumbers = getPurchaseNumbers(5);
-  const lotteryNumbers = getPurchaseNumbers(5);
+
+  console.log("getServerSideProps---luckyNumbers--->", luckyNumbers);
 
   return {
     props: {
       lottery: JSON.parse(JSON.stringify(lottery)),
-      lotteryNumbers: JSON.parse(JSON.stringify(lotteryNumbers)),
+      luckyNumbers:
+        luckyNumbers.length > 0 ? JSON.parse(JSON.stringify(luckyNumbers)) : [],
       numbersPurchased: JSON.parse(JSON.stringify(purchaseNumbers)),
     },
   };

@@ -1,16 +1,16 @@
-require('@nomiclabs/hardhat-waffle')
-require('dotenv').config()
+require("@nomiclabs/hardhat-waffle");
+require("dotenv").config();
 
 module.exports = {
-  defaultNetwork: 'localhost',
+  defaultNetwork: "localhost",
   networks: {
     hardhat: {},
     localhost: {
-      url: 'http://127.0.0.1:8545',
+      url: "http://127.0.0.1:8545",
     },
   },
   solidity: {
-    version: '0.8.17',
+    version: "0.8.17",
     settings: {
       optimizer: {
         enabled: true,
@@ -21,4 +21,4 @@ module.exports = {
   mocha: {
     timeout: 40000,
   },
-}
+};

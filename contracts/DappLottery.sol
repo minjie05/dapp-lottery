@@ -97,9 +97,10 @@ contract DappLottery is Ownable {
         string[] memory luckyNumbers
     ) public {
         require(lotteries[id].owner == msg.sender, "Unauthorized entity");
-        require(luckyNumbers.length > 0, "Lucky numbers cannot be zero");
+        require(lotteries[id].participants < 1, "Tickets have been purchased");
         /** 用于检查指定彩票ID的幸运数字数组长度是否小于1。如果长度小于1，表示还没有生成幸运数字，可以继续生成操作。 */
         require(lotteryLuckyNumbers[id].length < 1, "Already generated");
+        require(luckyNumbers.length > 0, "Lucky numbers cannot be zero");
 
         lotteryLuckyNumbers[id] = luckyNumbers;
     }

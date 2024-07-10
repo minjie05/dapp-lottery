@@ -1,23 +1,44 @@
 import { FaTimes } from "react-icons/fa";
 import { useState } from "react";
-import { getPurchaseNumbers } from "@/services/fakeData";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "@/store/globalSlices";
+import { generatorLuckyNumbers } from "@/utils/index";
+import { exportLuckyNumbers } from "@/services/blockchain";
 
-export const Generator = ({ show }) => {
+export const Generator = () => {
+  const router = useRouter();
+  const { jackpotId } = router.query;
   const { setGereratorModal } = globalActions;
   const [luckyNumbers, setLuckyNumbers] = useState("");
   const { gereratorModal } = useSelector((state) => state.globalState);
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     console.log(
-      "generator---luckyNumbers--->",
-      getPurchaseNumbers(luckyNumbers)
+      "handleSubmit--->",
+      jackpotId,
+      generatorLuckyNumbers(luckyNumbers)
     );
-    dispatch(setGereratorModal("scale-0"));
+
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await exportLuckyNumbers(jackpotId, generatorLuckyNumbers(luckyNumbers))
+          .then(() => {
+            setLuckyNumbers("");
+            dispatch(setGereratorModal("scale-0"));
+            resolve();
+          })
+          .catch(() => reject());
+      }),
+      {
+        pending: "Approve transaction...",
+        success: "Jackpot created successfully 👌",
+        reject: "Encountered error 🤯",
+        error: "Encountered error 🤯",
+      }
+    );
   };
   return (
     <div
@@ -47,12 +68,15 @@ export const Generator = ({ show }) => {
               value={luckyNumbers}
             />
           </div>
-          <button
-            type="submit"
-            className="flex flex-row justify-center items-center w-full text-white text-md py-2 px-5 rounded-full drop-shadow-xl bg-[#ea580c] hover:bg-[#c2410c]"
+          <div
+            onClick={() => {
+              handleSubmit();
+            }}
+            className="flex flex-row justify-center items-center 
+            w-full text-white text-md py-2 px-5 rounded-full drop-shadow-xl bg-[#ea580c] hover:bg-[#c2410c]"
           >
             Generate and Save
-          </button>
+          </div>
         </form>
       </div>
     </div>

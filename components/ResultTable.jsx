@@ -13,6 +13,13 @@ export const ResultTable = ({ jackpot, participantList, lotteryResult }) => {
   const { wallet } = useSelector((state) => state.globalState);
   const dispatch = useDispatch();
 
+  const onDawn = () => {
+    if (jackpot?.expiresAt < Date.now()) {
+      return toast.warning("The ticket has expired.");
+    }
+    dispatch(setWinnersModal("scale-100"));
+  };
+
   return (
     <div className="px-5 bg-slate-100 py-10 h-screen">
       <div className="flex flex-col items-center justify-center text-center py-10">
@@ -44,11 +51,11 @@ export const ResultTable = ({ jackpot, participantList, lotteryResult }) => {
           <CountDown timestamp={jackpot?.expiresAt}></CountDown>
         ) : null}
         <div className="flex justify-center items-center space-x-2">
-          {wallet?.toLowerCase() == jackpot?.owner ? (
+          {wallet?.toLowerCase() == jackpot?.owner && !jackpot?.drawn ? (
             <button
               className="border text-white bg-amber-500 rounded-full 
           px-4 py-2 font-semibold hover:bg-[#ea580c]"
-              onClick={() => dispatch(setWinnersModal("scale-100"))}
+              onClick={onDawn}
             >
               Perform Draw
             </button>

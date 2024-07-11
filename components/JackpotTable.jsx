@@ -18,7 +18,7 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
 
   const handlePurchase = async (index) => {
     if (!wallet) return toast.warning("Connect your wallet.");
-    if (!index) return;
+    if (index == undefined) return;
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
@@ -81,7 +81,7 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
 
           <Link
             href={"/result/" + jackpot?.id}
-            className="py-2 px-4 boder bg-gray-500 rounded-full font-semibold text-white hover:bg-rose-600"
+            className="py-2 px-4 boder bg-[#ef4444] rounded-full font-semibold text-white hover:bg-rose-600"
           >
             Draw Result
           </Link>

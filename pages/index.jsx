@@ -25,7 +25,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      jackpots: JSON.parse(JSON.stringify(lotteries)),
+      jackpots: lotteries ? JSON.parse(JSON.stringify(lotteries)) : [],
     },
   };
 };

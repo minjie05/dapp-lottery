@@ -142,6 +142,13 @@ export const getPurchaseNumbers = async (id) => {
   return structuredNumber(participants);
 };
 
+export const getParticipants = async (id) => {
+  const contract = await ssrEthereumContract();
+  const participants = await contract.getLotteryParticipants(id);
+
+  return structuredParticipants(participants);
+};
+
 export const getLottery = async (id) => {
   const contract = await ssrEthereumContract();
   const lottery = await contract.functions.getLottery(id);

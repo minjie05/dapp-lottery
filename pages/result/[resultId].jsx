@@ -1,12 +1,14 @@
-import Head from 'next/head'
-import { Navbar } from '@/components/Navbar'
-import { ResultTable } from '@/components/ResultTable'
-import { Winners } from '@/components/winners'
-import { generateLottery, generateLotteryParticipants } from '@/services/fakeData'
+import Head from "next/head";
+import { Navbar } from "@/components/Navbar";
+import { ResultTable } from "@/components/ResultTable";
+import { Winners } from "@/components/winners";
+import {
+  getLottery,
+  getLuckyNumbers,
+  getParticipants,
+} from "@/services/blockchain.jsx";
 
 export default function Result({ lottery, participantList, lotteryResult }) {
-  console.log('Result---function --->', lottery, participantList, lotteryResult)
-
   return (
     <div className="overflow-hidden">
       <Head>
@@ -21,14 +23,15 @@ export default function Result({ lottery, participantList, lotteryResult }) {
       />
       <Winners />
     </div>
-  )
+  );
 }
 
 export const getServerSideProps = async (context) => {
-  const { jackpotId } = context.query
-  const lottery = generateLottery(jackpotId)
-  const participantList = generateLotteryParticipants(6)
-  const lotteryResult = []
+  const { resultId } = context.query;
+  const lottery = await getLottery(resultId);
+
+  const participantList = await getParticipants(resultId);
+  const lotteryResult = [];
 
   return {
     props: {
@@ -36,5 +39,5 @@ export const getServerSideProps = async (context) => {
       participantList: JSON.parse(JSON.stringify(participantList)),
       lotteryResult: JSON.parse(JSON.stringify(lotteryResult)),
     },
-  }
-}
+  };
+};

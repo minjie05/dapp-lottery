@@ -104,3 +104,21 @@ export const structuredNumber = (participants) => {
 
   return res;
 };
+
+export const structuredResult = (result) => {
+  const LotteryResult = {
+    id: Number(result[0]),
+    completed: result[1],
+    paidout: result[2],
+    timestamp: Number(result[3]),
+    sharePerWinner: fromWei(result[4] || 0),
+    winners: [],
+  };
+
+  for (let i = 0; i < result[5]?.length; i++) {
+    const winner = result[5][i][1];
+    LotteryResult.winners.push(winner);
+  }
+
+  return LotteryResult;
+};

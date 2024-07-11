@@ -10,7 +10,7 @@ import { globalActions } from "@/store/globalSlices";
 
 export const ResultTable = ({ jackpot, participantList, lotteryResult }) => {
   const { setWinnersModal } = globalActions;
-  const { winnersModal } = useSelector((state) => state.globalState);
+  const { wallet } = useSelector((state) => state.globalState);
   const dispatch = useDispatch();
 
   return (
@@ -44,13 +44,15 @@ export const ResultTable = ({ jackpot, participantList, lotteryResult }) => {
           <CountDown timestamp={jackpot?.expiresAt}></CountDown>
         ) : null}
         <div className="flex justify-center items-center space-x-2">
-          <button
-            className="border text-white bg-amber-500 rounded-full 
+          {wallet?.toLowerCase() == jackpot?.owner ? (
+            <button
+              className="border text-white bg-amber-500 rounded-full 
           px-4 py-2 font-semibold hover:bg-[#ea580c]"
-            onClick={() => dispatch(setWinnersModal("scale-100"))}
-          >
-            Perform Draw
-          </button>
+              onClick={() => dispatch(setWinnersModal("scale-100"))}
+            >
+              Perform Draw
+            </button>
+          ) : null}
           <Link
             href={"/jackpots/" + jackpot?.id}
             className="py-2 px-4 boder bg-[#ef4444] rounded-full font-semibold text-white hover:bg-rose-600"

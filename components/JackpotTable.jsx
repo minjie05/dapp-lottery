@@ -18,7 +18,7 @@ export const JackpotTable = ({ jackpot, luckyNumbers, participants }) => {
 
   const handlePurchase = async (index) => {
     if (!wallet) return toast.warning("Connect your wallet.");
-    if (index == undefined) return;
+    if (index === "") return;
 
     await toast.promise(
       new Promise(async (resolve, reject) => {

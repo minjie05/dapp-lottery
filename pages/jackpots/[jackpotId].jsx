@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { globalActions } from "@/store/globalSlices";
 import { Navbar } from "@/components/Navbar";
@@ -9,7 +10,6 @@ import {
   getLuckyNumbers,
   getPurchaseNumbers,
 } from "@/services/blockchain.jsx";
-import { useEffect } from "react";
 
 export default function Jackpot({ lottery, luckyNumber, numbersPurchased }) {
   const dispatch = useDispatch();

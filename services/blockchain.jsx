@@ -7,6 +7,7 @@ import {
   toWei,
   fromWei,
   reportError,
+  structuredResult,
   structuredNumber,
   structureLotteries,
   structuredParticipants,
@@ -82,6 +83,19 @@ export const exportLuckyNumbers = async (id, luckyNumbers) => {
   }
 };
 
+export const performDraw = async (id, numOfWinners) => {
+  try {
+    const wallet = store.getState().globalState.wallet;
+    const contract = await csrEthreumContract();
+    tx = await contract.functions.randomSlectWinners(id, numOfWinners, {
+      from: wallet,
+    });
+    await tx.wait();
+  } catch (error) {
+    reportError(error);
+  }
+};
+
 export const buyTickets = async (id, luckyNumberId, ticketPrice) => {
   try {
     const wallet = store.getState().globalState.wallet;
@@ -126,6 +140,13 @@ export const getLotteries = async () => {
   const lotteries = await contract.functions.getLotteries();
 
   return structureLotteries(lotteries[0]);
+};
+
+export const getLotteryResult = async (id) => {
+  const contract = await ssrEthereumContract();
+  const lotteryResult = await contract.functions.getLotteryResult(id);
+
+  return structuredResult(lotteryResult[0]);
 };
 
 export const getLuckyNumbers = async (id) => {

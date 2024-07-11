@@ -6,4 +6,6 @@ export const globalState = {
   jackpot: null,
   luckyNumbers: [],
   participants: [],
+  result: null,
+  participantList: [],
 };
